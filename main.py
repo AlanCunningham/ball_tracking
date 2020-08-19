@@ -5,6 +5,7 @@ import argparse
 import cv2
 import imutils
 import time
+import requests
 
 
 # https://www.pyimagesearch.com/2015/09/14/ball-tracking-with-opencv/
@@ -41,7 +42,7 @@ def main():
             break
 
         # Resize, blur and convert to HSV colour space
-        frame = imutils.resize(frame, width=360)
+        frame = imutils.resize(frame, width=240)
         blurred = cv2.GaussianBlur(frame, (11, 11), 0)
         hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
@@ -68,6 +69,9 @@ def main():
             MIN_SIZE = 10
             if radius > MIN_SIZE:
                 print(f"X: {x} | Y: {y}")
+                params = {"x": x, "y": y}
+                url = "http://192.168.0.244:8000/ball"
+                requests.get(url, params=params)
                 # Draw the circle and centroid on frame
                 cv2.circle(frame, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                 cv2.circle(frame, center, 5, (0, 0, 255), -1)
